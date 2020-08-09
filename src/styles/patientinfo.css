@@ -1,0 +1,8 @@
+span.question {
+    text-align: center;
+    width: -webkit-fill-available;
+    font-size: 2em;
+    color: rgb(76, 0, 255);
+    line-height: 1.2em;
+    height: 10vh;
+}
