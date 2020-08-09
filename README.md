@@ -1,4 +1,4 @@
-# calculator
+# Medical Appointment Maker
 
 ## Project setup
 ```
