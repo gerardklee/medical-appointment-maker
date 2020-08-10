@@ -26,7 +26,8 @@ import PhoneNumber from './components/phonenumber.vue';
 import Symptom from './components/symptoms.vue';
 import Appointment from './components/appointment.vue';
 import Consent from './components/consent.vue';
-
+import DB from './indexedDb.js';
+import DBList from './dblist.js';
 export default {
     name: 'App',
     components: {
@@ -42,6 +43,8 @@ export default {
         return {
             isValid: true,
             errorMessage: '',
+            dbName: 'MedicalSupport',
+            version: 1,
             symptom: {
                 fever: '',
                 cough: '',
@@ -66,7 +69,8 @@ export default {
     },
     
     methods: {
-        clickSave() {
+        async clickSave() {
+            /*
             for (let key in this.allData.symptom) {
                 if (!this.allDAta.symptom[key]) {
                     this.errorMessage = 'please insert N/A if no symptoms';
@@ -83,7 +87,18 @@ export default {
                     return;
                 }
             }
+            this.errorMessage = '';
             alert('passed all cases');
+            */
+            console.log(DBList);
+            if (this.dbName in DBList && DBList[this.dbName] == this.version) {
+                alert('db already exists')
+                return;
+            } else {
+                const database = await DB.createDB(this.dbName, this.version);
+                console.log('created');
+                console.log('database: ', database);
+            }   
         },
         updateName(data) {
             this.allData.firstName = data['firstName'];
