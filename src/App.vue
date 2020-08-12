@@ -27,7 +27,7 @@ import Symptom from './components/symptoms.vue';
 import Appointment from './components/appointment.vue';
 import Consent from './components/consent.vue';
 import DB from './indexedDb.js';
-import DBList from './dblist.js';
+
 export default {
     name: 'App',
     components: {
@@ -67,7 +67,7 @@ export default {
             }
         }
     },
-    
+
     methods: {
         async clickSave() {
             /*
@@ -90,15 +90,14 @@ export default {
             this.errorMessage = '';
             alert('passed all cases');
             */
-            console.log(DBList);
-            if (this.dbName in DBList && DBList[this.dbName] == this.version) {
-                alert('db already exists')
-                return;
-            } else {
+            const isDBExists = (await window.indexedDB.databases()).map(db => db.name).includes(this.dbName);
+
+            if (!isDBExists) {
                 const database = await DB.createDB(this.dbName, this.version);
-                console.log('created');
-                console.log('database: ', database);
-            }   
+                console.log('database: ', database);  
+            }
+
+            // open up the DB and save the data
         },
         updateName(data) {
             this.allData.firstName = data['firstName'];
