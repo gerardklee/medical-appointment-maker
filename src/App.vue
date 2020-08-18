@@ -91,12 +91,13 @@ export default {
             alert('passed all cases');
             */
             const isDBExists = (await window.indexedDB.databases()).map(db => db.name).includes(this.dbName);
-
+			let database = null;
             if (!isDBExists) {
-                const database = await DB.createDB(this.dbName, this.version);
+                database = await DB.createDB(this.dbName, this.version);
                 console.log('database: ', database);  
             }
-
+			
+			DB.createObj(this.dbName, this.version, 'Test');
             // open up the DB and save the data
         },
         updateName(data) {
