@@ -64,13 +64,25 @@ export default {
                 date: null,
                 isChild: null,
                 appointee: null
-            }
+			},
         }
-    },
-
+	},
+	
+	async created() {
+		
+		const isDBExists = (await window.indexedDB.databases()).map(db => db.name).includes(this.dbName);
+		let database = null;
+		if (!isDBExists) {
+			database = await DB.createDB(this.dbName, this.version);
+			console.log('database: ', database);  
+		}
+		
+		await DB.createObj(this.dbName, this.version, 'PatientInfo');
+		// open up the DB and save the data
+	},
+	
     methods: {
         async clickSave() {
-            /*
             for (let key in this.allData.symptom) {
                 if (!this.allDAta.symptom[key]) {
                     this.errorMessage = 'please insert N/A if no symptoms';
@@ -88,17 +100,10 @@ export default {
                 }
             }
             this.errorMessage = '';
-            alert('passed all cases');
-            */
-            const isDBExists = (await window.indexedDB.databases()).map(db => db.name).includes(this.dbName);
-			let database = null;
-            if (!isDBExists) {
-                database = await DB.createDB(this.dbName, this.version);
-                console.log('database: ', database);  
-            }
+			alert('passed all cases');
 			
-			DB.createObj(this.dbName, this.version, 'Test');
-            // open up the DB and save the data
+			DB.addData(this.allData, this.dbName, this.version);
+			
         },
         updateName(data) {
             this.allData.firstName = data['firstName'];

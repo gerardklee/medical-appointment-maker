@@ -33,8 +33,11 @@ var createObj = async function(dbName, version, storeName) {
 				var database = e.target.result;
 				console.log('onupgradeneeded');
 				var objectStore = database.createObjectStore(storeName, {
-					keyPath: 'id'
+					autoIncrement: true
 				});
+				
+				objectStore.createIndex("Patient", "Patient", { unique: true });
+				
 				console.log(objectStore);
 				resolve('yes');
 			};
@@ -42,7 +45,30 @@ var createObj = async function(dbName, version, storeName) {
     });
 }
 
+var addData = async function(data, dbName, version) {
+	version++;
+	var DBOpenRequest = window.indexedDB.open(dbName, version);
+	DBOpenRequest.onsuccess = function(event) {
+		console.log(event, 'connected db in addData()');
+		let db = DBOpenRequest.result;
+		let transaction = db.transaction(['PatientInfo'], "readwrite");
+		transaction.oncomplete = function(event) {
+			console.log(event, 'transaction completed');
+		};
+		transaction.onerror = function(event) {
+			console.log(event, 'error in addData() transaction');
+			console.log('transaction error occured');
+		}
+		var objectStore = transaction.objectStore("PatientInfo");
+		var objectStoreRequest = objectStore.add(data);
+		objectStoreRequest.onsuccess = function(event) {
+			console.log(event, 'added');
+		};
+	}	
+}
+
 module.exports = {
 	createDB,
-	createObj
+	createObj,
+	addData
 }
