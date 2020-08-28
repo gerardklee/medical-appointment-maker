@@ -100,9 +100,9 @@ export default {
                 }
             }
             this.errorMessage = '';
-			alert('passed all cases');
+	    alert('passed all cases');
 			
-			DB.addData(this.allData, this.dbName, this.version);
+	    DB.addData(this.allData, this.dbName, this.version);
 			
         },
         updateName(data) {
